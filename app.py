@@ -23,7 +23,7 @@ def init_db():
             tahun INTEGER
         )
     """)
-    conn.commit()
+    conn.commit() 
     conn.close()
 
 init_db()
@@ -31,38 +31,35 @@ init_db()
 @app.route("/")
 def index():
     conn = get_db()
-    data = conn.execute("SELECT * FROM diabetes").fetchall()
+    data = conn.execute("SELECT * FROM diabetes ORDER BY id DESC").fetchall()
     conn.close()
     return render_template("index.html", data=data)
 
-@app.route("/tambah", methods=["GET", "POST"])
+@app.route("/tambah", methods=["POST"])
 def tambah():
-    if request.method == "POST":
-        nama_provinsi = request.form["nama_provinsi"]
-        nama_kabupaten_kota = request.form["nama_kabupaten_kota"]
-        jumlah_penderita_dm = request.form["jumlah_penderita_dm"]
-        tahun = request.form["tahun"]
+    nama_provinsi = request.form["nama_provinsi"]
+    nama_kabupaten_kota = request.form["nama_kabupaten_kota"]
+    jumlah_penderita_dm = request.form["jumlah_penderita_dm"]
+    tahun = request.form["tahun"]
 
-        kode_provinsi = request.form.get("kode_provinsi", 0)
-        kode_kabupaten_kota = request.form.get("kode_kabupaten_kota", 0)
-        satuan = request.form.get("satuan", "Orang")
+    # optional
+    kode_provinsi = request.form.get("kode_provinsi", 0)
+    kode_kabupaten_kota = request.form.get("kode_kabupaten_kota", 0)
+    satuan = request.form.get("satuan", "Orang")
 
-        conn = get_db()
-        conn.execute("""
-            INSERT INTO diabetes 
-            (kode_provinsi, nama_provinsi, kode_kabupaten_kota,
-             nama_kabupaten_kota, jumlah_penderita_dm, satuan, tahun)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (
-            kode_provinsi, nama_provinsi, kode_kabupaten_kota,
-            nama_kabupaten_kota, jumlah_penderita_dm, satuan, tahun
-        ))
-        conn.commit()
-        conn.close()
-
-        return redirect(url_for("index"))
-
-    return render_template("index.html")
+    conn = get_db()
+    conn.execute("""
+        INSERT INTO diabetes
+        (kode_provinsi, nama_provinsi, kode_kabupaten_kota,
+         nama_kabupaten_kota, jumlah_penderita_dm, satuan, tahun)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (
+        kode_provinsi, nama_provinsi, kode_kabupaten_kota,
+        nama_kabupaten_kota, jumlah_penderita_dm, satuan, tahun
+    ))
+    conn.commit()
+    conn.close()
+    return redirect(url_for("index"))
 
 @app.route("/edit/<int:id>", methods=["POST"])
 def edit(id):
@@ -71,39 +68,37 @@ def edit(id):
     jumlah_penderita_dm = request.form["jumlah_penderita_dm"]
     tahun = request.form["tahun"]
 
+    # optional
+    kode_provinsi = request.form.get("kode_provinsi", 0)
+    kode_kabupaten_kota = request.form.get("kode_kabupaten_kota", 0)
+    satuan = request.form.get("satuan", "Orang")
+
     conn = get_db()
     conn.execute("""
         UPDATE diabetes
-        SET nama_provinsi = ?,
-            nama_kabupaten_kota = ?,
-            jumlah_penderita_dm = ?,
-            tahun = ?
-        WHERE id = ?
+        SET kode_provinsi=?,
+            nama_provinsi=?,
+            kode_kabupaten_kota=?,
+            nama_kabupaten_kota=?,
+            jumlah_penderita_dm=?,
+            satuan=?,
+            tahun=?
+        WHERE id=?
     """, (
-        nama_provinsi,
-        nama_kabupaten_kota,
-        jumlah_penderita_dm,
-        tahun,
-        id
+        kode_provinsi, nama_provinsi, kode_kabupaten_kota,
+        nama_kabupaten_kota, jumlah_penderita_dm, satuan, tahun, id
     ))
     conn.commit()
     conn.close()
-
     return redirect(url_for("index"))
 
-@app.route("/hapus/<int:id>")
+@app.route("/hapus/<int:id>", methods=["POST"])
 def hapus(id):
     conn = get_db()
-    conn.execute("DELETE FROM diabetes WHERE id = ?", (id,))
+    conn.execute("DELETE FROM diabetes WHERE id=?", (id,))
     conn.commit()
     conn.close()
-
     return redirect(url_for("index"))
 
-
 if __name__ == "__main__":
-<<<<<<< HEAD
-    app.run(host="0.0.0.0", port=5005,debug=True)
-=======
-    app.run(debug=True, host='0.0.0.0', port=5003)
->>>>>>> f7eb6b2ecb119c72d98be9b9f92a1595b30d2c26
+    app.run(host="0.0.0.0", port=5006, debug=True)
