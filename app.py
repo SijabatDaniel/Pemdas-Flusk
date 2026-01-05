@@ -64,5 +64,42 @@ def tambah():
 
     return render_template("index.html")
 
+@app.route("/edit/<int:id>", methods=["POST"])
+def edit(id):
+    nama_provinsi = request.form["nama_provinsi"]
+    nama_kabupaten_kota = request.form["nama_kabupaten_kota"]
+    jumlah_penderita_dm = request.form["jumlah_penderita_dm"]
+    tahun = request.form["tahun"]
+
+    conn = get_db()
+    conn.execute("""
+        UPDATE diabetes
+        SET nama_provinsi = ?,
+            nama_kabupaten_kota = ?,
+            jumlah_penderita_dm = ?,
+            tahun = ?
+        WHERE id = ?
+    """, (
+        nama_provinsi,
+        nama_kabupaten_kota,
+        jumlah_penderita_dm,
+        tahun,
+        id
+    ))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("index"))
+
+@app.route("/hapus/<int:id>")
+def hapus(id):
+    conn = get_db()
+    conn.execute("DELETE FROM diabetes WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("index"))
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5005,debug=True)

@@ -176,6 +176,83 @@
       </div>
     </div>
 
+    <!-- ================= MODAL EDIT DATA (TAMBAHAN) ================= -->
+{% for d in data %}
+<div class="modal fade" id="modalEdit{{ d.id }}" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="/edit/{{ d.id }}">
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title">Edit Data Diabetes</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Nama Provinsi</label>
+            <input
+              type="text"
+              name="nama_provinsi"
+              class="form-control"
+              value="{{ d.nama_provinsi }}"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Nama Kabupaten/Kota</label>
+            <input
+              type="text"
+              name="nama_kabupaten_kota"
+              class="form-control"
+              value="{{ d.nama_kabupaten_kota }}"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Jumlah Penderita DM</label>
+            <input
+              type="number"
+              name="jumlah_penderita_dm"
+              class="form-control"
+              value="{{ d.jumlah_penderita_dm }}"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Tahun</label>
+            <input
+              type="number"
+              name="tahun"
+              class="form-control"
+              value="{{ d.tahun }}"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-warning">Update</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+          >
+            Batal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<!-- ================= END MODAL EDIT ================= -->
+
+
     <!-- REQUIRED JS -->
     <script src="{{ url_for('static', filename='plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
