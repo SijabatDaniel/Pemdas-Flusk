@@ -102,4 +102,8 @@ def hapus(id):
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     app.run(host="0.0.0.0", port=5005,debug=True)
+=======
+    app.run(debug=True, host='0.0.0.0', port=5003)
+>>>>>>> f7eb6b2ecb119c72d98be9b9f92a1595b30d2c26
